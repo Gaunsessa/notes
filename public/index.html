@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>notes</title>
+</head>
+<body>
+    <textarea id="text" id="" rows="1" wrap="soft" autocomplete="off" spellcheck="false" tabindex="-1" disabled>[ Press Enter To Edit ]</textarea>
+
+    <script>
+        let text = document.getElementById("text");
+
+        window.addEventListener("resize", resize);
+        resize();
+
+        function resize() {
+            text.style.width  = String(window.innerWidth - 40) + "px";
+            text.style.height = String(window.innerHeight - 40) + "px";
+        }
+
+        document.addEventListener("keydown", event => {
+            if (event.key == "Enter" && text.disabled) {
+                event.preventDefault();
+
+                text.innerText = "";
+                text.disabled  = false;
+
+                text.select();
+            }
+
+            if (event.key == "Tab" && !text.disabled) {
+                event.stopPropagation();
+                event.preventDefault();
+
+                text.setRangeText("    ", text.selectionStart, text.selectionEnd, "end");
+            }
+
+            if (event.key == "s" && event.getModifierState("Control") && !text.disabled) {
+                event.preventDefault();
+
+                fetch("/", {
+                    method: "POST",
+                    headers: new Headers([
+                        ['Content-Type', 'application/json']
+                    ]),
+                    redirect: "follow",
+                    body: JSON.stringify({
+                        "text": text.value
+                    }),
+                }).then(res => { if (res.redirected) window.location.href = res.url; });
+            }
+        });
+    </script>
+</body>
+</html>
