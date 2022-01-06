@@ -20,7 +20,16 @@ app.post("/", (req, res) => {
 });
 
 app.get("/n/:note", (req, res) => {
-    res.send(page.replace("NOTEDATA", fs.readFileSync(__dirname + "/notes/" + req.params["note"], "utf-8")));
+    let path = __dirname + "/notes/" + req.params["note"];
+
+    if (fs.existsSync(path))
+        res.send(page.replace("NOTEDATA", fs.readFileSync(path, "utf-8")));
+    else
+        res.sendFile(__dirname + "/public/404.html");
+});
+
+app.get("*", (req, res) => {
+    res.sendFile(__dirname + "/public/404.html");
 });
 
 app.listen(1273, () => console.log("Server Listening On Port : 1273"));
