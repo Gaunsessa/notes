@@ -32,4 +32,4 @@ app.get("*", (req, res) => {
     res.sendFile(__dirname + "/public/404.html");
 });
 
-app.listen(1273, () => console.log("Server Listening On Port : 1273"));
+app.listen(6683, () => console.log("Server Listening On Port : 6683"));
